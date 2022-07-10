@@ -25,12 +25,12 @@ function Get-SecretInfo {
 			$_.Properties.'ms-mcs-admpwdexpirationtime' | Select-Object -First 1
 		} else {$null}
 		return @(, [Microsoft.PowerShell.SecretManagement.SecretInformation]::new(
-			$_.Properties.name,
-			"String",
-			$VaultName,
-			@{'ExpirationTime' = ([datetime]::FromFileTime($exptime)).ToLocalTime()
-			}
-		))
+				$_.Properties.name,
+				"String",
+				$VaultName,
+				@{'ExpirationTime' = ([datetime]::FromFileTime($exptime)).ToLocalTime()
+				}
+			))
 	}
 }
 

@@ -32,7 +32,7 @@ Describe 'Get-SecretInfo' {
 	
 	It 'Gets correct expiry times' {
 		(Get-SecretInfo $testcomputername).Metadata.ExpirationTime | 
-			Should -Be (Get-AdmPwdPassword $testcomputername).ExpirationTimestamp
+		Should -Be (Get-AdmPwdPassword $testcomputername).ExpirationTimestamp
 	}
 	
 	It 'Gets a sensible expiration time' {
