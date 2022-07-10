@@ -7,7 +7,5 @@
 	CmdletsToExport   = @()
 	VariablesToExport = @()
 	AliasesToExport   = @()
-	RequiredModules   = @(
-		@{ModuleName = 'ActiveDirectory'; ModuleVersion = '0.0'}
-	)
+	RequiredModules   = @()
 }

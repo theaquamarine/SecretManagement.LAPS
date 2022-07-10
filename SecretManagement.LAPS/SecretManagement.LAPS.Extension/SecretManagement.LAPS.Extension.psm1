@@ -43,10 +43,6 @@ function Get-Secret {
 	)
 	$searcher = [adsisearcher]"(&(ms-mcs-admpwd=*)(name=$Name))"
 	$searcher.FindAll() | ForEach-Object {$_.Properties.'ms-mcs-admpwd'}
-	# try {
-	# 	# Suppress ActiveDirectory not found error
-	# 	return (Get-ADComputer -Properties ms-mcs-admpwd -Identity $Name | select -ExpandProperty ms-mcs-admpwd)
-	# } catch {}
 }
 
 function Remove-Secret {
