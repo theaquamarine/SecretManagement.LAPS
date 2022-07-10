@@ -18,13 +18,19 @@ function Get-SecretInfo {
 		$VerbosePreference = 'Continue'
 	}
 	Write-Verbose "Get-SecretInfo -Filter is $Filter"
-	Get-ADComputer -LDAPFilter "(&(ms-mcs-admpwd=*)(name=$filter))" -Properties ms-Mcs-AdmPwdExpirationTime |
+	$searcher = [adsisearcher]"(&(ms-mcs-admpwd=*)(name=$filter))"
+	$searcher.FindAll() |
 	ForEach-Object {
+		$exptime = if ($_.Properties.'ms-mcs-admpwdexpirationtime') {
+			$_.Properties.'ms-mcs-admpwdexpirationtime' | Select-Object -First 1
+		} else {$null}
 		return @(, [Microsoft.PowerShell.SecretManagement.SecretInformation]::new(
-				$_.Name,
-				"String",
-				$VaultName,
-				@{'ExpirationTime' = ($_.'ms-Mcs-AdmPwdExpirationTime' -as [datetime])}))
+			$_.Properties.name,
+			"String",
+			$VaultName,
+			@{'ExpirationTime' = ([datetime]::FromFileTime($exptime)).ToLocalTime()
+			}
+		))
 	}
 }
 
@@ -35,10 +41,12 @@ function Get-Secret {
 		[string]$VaultName,
 		[hashtable]$AdditionalParameters
 	)
-	try {
-		# Suppress ActiveDirectory not found error
-		return (Get-ADComputer -Properties ms-mcs-admpwd -Identity $Name | select -ExpandProperty ms-mcs-admpwd)
-	} catch {}
+	$searcher = [adsisearcher]"(&(ms-mcs-admpwd=*)(name=$Name))"
+	$searcher.FindAll() | ForEach-Object {$_.Properties.'ms-mcs-admpwd'}
+	# try {
+	# 	# Suppress ActiveDirectory not found error
+	# 	return (Get-ADComputer -Properties ms-mcs-admpwd -Identity $Name | select -ExpandProperty ms-mcs-admpwd)
+	# } catch {}
 }
 
 function Remove-Secret {

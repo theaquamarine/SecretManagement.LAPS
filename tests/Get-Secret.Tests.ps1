@@ -4,7 +4,7 @@ Describe 'Get-Secret' {
 
 		Register-SecretVault -ModuleName secretmanagement.laps -Name laps -AllowClobber
 
-		$testcomputername = 'testcomputer'
+		$testcomputername = 'lapstest' + (Get-Random -Maximum 999999)
 		$testpassword = 'PASSWORD1'
 		$computer = New-ADComputer $testcomputername -PassThru
 		$computer.'ms-Mcs-AdmPwd' = $testpassword
