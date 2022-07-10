@@ -4,7 +4,7 @@ function Test-SecretVault {
 		[string]$VaultName,
 		[hashtable]$AdditionalParameters
 	)
-	[bool](Get-ADDomain)
+	[bool][System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain()
 }
 
 function Get-SecretInfo {
